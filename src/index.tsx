@@ -14,7 +14,7 @@ export default function Command() {
       };
       pages: any;
     };
-  }>("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=zh-TW&leagueId=98767975604431411", {
+  }>("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=zh-TW", {
     headers: {
       "x-api-key": apiKey,
     },
@@ -30,7 +30,7 @@ export default function Command() {
     },
   });
   let eventList: Event[] = [];
-  const [events, setEvents] = useCachedState("matches", data?.data.schedule.events);
+  const [events, setEvents] = useCachedState<Event[]>("events", []);
 
   const [leagues, setLeagues] = useCachedState("leagues", dataLeagues?.data.leagues);
 
@@ -50,19 +50,25 @@ export default function Command() {
   };
 
   useEffect(() => {
-    eventList = events || [];
+    let eventList = data?.data.schedule.events || [];
+    // 对比赛进行过滤
+    if (filter !== "all") {
+        const filterLeague = leagues?.find((league) => league.id === filter);
+        eventList = eventList.filter((event) => event.league.slug === filterLeague?.slug);
+    } 
     // 对比赛进行排序
     eventList.sort((a, b) => {
       const dataA = new Date(a.startTime).getTime();
       const dataB = new Date(b.startTime).getTime();
       return dataB - dataA;
     });
+
+    setEvents(eventList);
   }, [filter]);
   return (
     <List
       isShowingDetail={showingDetail}
-      isLoading={isLoading}
-      searchBarAccessory={<Filter handleChange={onFilterChange} />}
+      searchBarAccessory={<Filter leagueList={leagues} handleChange={onFilterChange} />}
     >
       <List.EmptyView title="No Result" />
       <List.Section title="Matches" key={"1"}>
@@ -73,6 +79,10 @@ export default function Command() {
             name: "Worlds",
             image: "http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592594612171_WorldsDarkBG.png",
           };
+          const title =
+            event.state === "completed"
+              ? `${team1.code} ${team1.result.gameWins} - ${team2.result.gameWins} ${team2.code}`
+              : `${event.blockName} ${team1.code} vs ${team2.code}`;
 
           return (
             <List.Item
@@ -83,14 +93,26 @@ export default function Command() {
                 tintColor: iconColor[event.state],
               }}
               keywords={["T1"]}
-              title={`${team1.code} vs ${team2.code}`}
+              title={title}
               subtitle={prettyDate(event.startTime)}
               actions={
                 <ActionPanel>
-                  <Action title="Show Details" onAction={() => setShowingDetail(!showingDetail)} />
-                  <Action title="Add Calendar" onAction={() => setShowingDetail(!showingDetail)} />
-                  <Action title="Open Bilibili" onAction={() => setShowingDetail(!showingDetail)} />
-                  <Action title="Open YouTube" onAction={() => setShowingDetail(!showingDetail)} />
+                  <Action
+                    title="Show Details"
+                    icon={Icon.CircleEllipsis}
+                    onAction={() => setShowingDetail(!showingDetail)}
+                  />
+                  <Action title="Add Calendar" icon={Icon.Calendar} onAction={() => setShowingDetail(!showingDetail)} />
+                  <Action
+                    title="Open with Bilibili"
+                    icon={Icon.Video}
+                    onAction={() => setShowingDetail(!showingDetail)}
+                  />
+                  <Action
+                    title="Open with YouTube"
+                    icon={Icon.Video}
+                    onAction={() => setShowingDetail(!showingDetail)}
+                  />
                 </ActionPanel>
               }
               accessories={[
@@ -100,9 +122,14 @@ export default function Command() {
                 },
                 {
                   icon: getIcon(team1.image),
+                  text: team1.result.gameWins.toString(),
+                },
+                {
+                  text: " : ",
                 },
                 {
                   icon: getIcon(team2.image),
+                  text: team2.result.gameWins.toString(),
                 },
               ]}
             />
