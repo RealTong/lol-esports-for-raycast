@@ -68,6 +68,7 @@ export default function Command() {
   return (
     <List
       isShowingDetail={showingDetail}
+      isLoading={isLoading || isLoadingLeagues}
       searchBarAccessory={<Filter leagueList={leagues} handleChange={onFilterChange} />}
     >
       <List.EmptyView title="No Result" />
@@ -94,20 +95,20 @@ export default function Command() {
               actions={
                 <ActionPanel>
                   <Action
-                    title="Show Details"
-                    icon={Icon.CircleEllipsis}
+                    title="Toggle Details"
+                    icon={Icon.AppWindowSidebarLeft}
                     onAction={() => setShowingDetail(!showingDetail)}
                   />
-                  <Action title="Add Calendar" icon={Icon.Calendar} onAction={() => setShowingDetail(!showingDetail)} />
+                  <Action title="Add Calendar" icon={Icon.Calendar} onAction={() => {}} />
                   <Action
-                    title="Open with Bilibili"
+                    title="See live on Bilibili"
                     icon={Icon.Video}
-                    onAction={() => setShowingDetail(!showingDetail)}
+                    onAction={() => {}}
                   />
                   <Action
-                    title="Open with YouTube"
+                    title="See live on YouTube"
                     icon={Icon.Video}
-                    onAction={() => setShowingDetail(!showingDetail)}
+                    onAction={() => {}}
                   />
                 </ActionPanel>
               }
