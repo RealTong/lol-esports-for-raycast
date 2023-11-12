@@ -16,6 +16,8 @@ As an avid fan of League of Legends, I often found it cumbersome to open specifi
 ## Features
 - [x] View match schedules for the current day
 - [x] Filter events by league
+- [ ] Add to calendar
+- [ ] Open live stream
 - [ ] Menu Bar Item to view match
 - [ ] i18n Support
 
