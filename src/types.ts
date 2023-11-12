@@ -1,10 +1,10 @@
 export type Event = {
   blockName: string;
   startTime: string;
-  state: string;
+  state: 'completed'|'inProgress'|'unstarted';
   type: string;
   league: League;
-  matches: Match[];
+  match: Match;
 };
 
 export type Match = {
