@@ -1,9 +1,12 @@
 export type Event = {
   blockName: string;
   startTime: string;
-  state: 'completed'|'inProgress'|'unstarted';
+  state: "completed" | "inProgress" | "unstarted";
   type: string;
-  league: League;
+  league: {
+    name: string;
+    slug: string;
+  };
   match: Match;
 };
 
@@ -34,6 +37,14 @@ export type Team = {
 };
 
 export type League = {
+  id: string;
+  image: string;
   name: string;
+  priority: number;
+  region: string;
   slug: string;
+  displayPriority: {
+    position: number;
+    status: "selected" | "force_selected";
+  };
 };

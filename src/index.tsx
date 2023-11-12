@@ -1,10 +1,12 @@
 import { List, Icon, ActionPanel, Action } from "@raycast/api";
 import { useCachedState, useFetch } from "@raycast/utils";
-import { Event } from "./types";
+import { Event, League } from "./types";
 import Filter from "./Filter";
 import { getIcon, prettyDate } from "./utils";
+import { useEffect } from "react";
 
 export default function Command() {
+  const apiKey = "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z";
   const { isLoading, data } = useFetch<{
     data: {
       schedule: {
@@ -14,10 +16,23 @@ export default function Command() {
     };
   }>("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=zh-TW&leagueId=98767975604431411", {
     headers: {
-      "x-api-key": "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z",
+      "x-api-key": apiKey,
     },
   });
+
+  const { isLoading: isLoadingLeagues, data: dataLeagues } = useFetch<{
+    data: {
+      leagues: League[];
+    };
+  }>("https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=zh-TW", {
+    headers: {
+      "x-api-key": apiKey,
+    },
+  });
+  let eventList: Event[] = [];
   const [events, setEvents] = useCachedState("matches", data?.data.schedule.events);
+
+  const [leagues, setLeagues] = useCachedState("leagues", dataLeagues?.data.leagues);
 
   const [filter, setFilter] = useCachedState("filter", "all");
   const [showingDetail, setShowingDetail] = useCachedState("showDetails", false);
@@ -33,6 +48,16 @@ export default function Command() {
     inProgress: "#FFC107",
     unstarted: "#6C757D",
   };
+
+  useEffect(() => {
+    eventList = events || [];
+    // 对比赛进行排序
+    eventList.sort((a, b) => {
+      const dataA = new Date(a.startTime).getTime();
+      const dataB = new Date(b.startTime).getTime();
+      return dataB - dataA;
+    });
+  }, [filter]);
   return (
     <List
       isShowingDetail={showingDetail}
@@ -44,6 +69,10 @@ export default function Command() {
         {events?.map((event: Event, index) => {
           const team1 = event.match.teams[0];
           const team2 = event.match.teams[1];
+          const league = leagues?.find((league) => league.slug === event.league.slug) || {
+            name: "Worlds",
+            image: "http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592594612171_WorldsDarkBG.png",
+          };
 
           return (
             <List.Item
@@ -66,8 +95,8 @@ export default function Command() {
               }
               accessories={[
                 {
-                  icon: getIcon('http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592594612171_WorldsDarkBG.png'),
-                  tag: "Worlds 2023",
+                  icon: getIcon(league.image),
+                  tag: league.name,
                 },
                 {
                   icon: getIcon(team1.image),
