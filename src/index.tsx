@@ -79,10 +79,6 @@ export default function Command() {
             name: "Worlds",
             image: "http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592594612171_WorldsDarkBG.png",
           };
-          const title =
-            event.state === "completed"
-              ? `${team1.code} ${team1.result.gameWins} - ${team2.result.gameWins} ${team2.code}`
-              : `${event.blockName} ${team1.code} vs ${team2.code}`;
 
           return (
             <List.Item
@@ -93,7 +89,7 @@ export default function Command() {
                 tintColor: iconColor[event.state],
               }}
               keywords={["T1"]}
-              title={title}
+              title={`${event.blockName} ${team1.code} vs ${team2.code}`}
               subtitle={prettyDate(event.startTime)}
               actions={
                 <ActionPanel>
