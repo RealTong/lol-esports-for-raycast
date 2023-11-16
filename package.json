@@ -3,7 +3,7 @@
   "name": "lol-esports",
   "title": "LoL Esports",
   "description": "See all matches calendar and results",
-  "icon": "command-icon.png",
+  "icon": "lolesports.png",
   "author": "RealTong",
   "categories": [
     "Fun"
@@ -13,7 +13,7 @@
     {
       "name": "index",
       "title": "LoL Esports",
-      "subtitle": "Esports",
+      "subtitle": "Matches",
       "description": "See all matches calendar and results",
       "mode": "view"
     }
