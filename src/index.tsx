@@ -4,6 +4,7 @@ import { Event, League } from "./types";
 import Filter from "./Filter";
 import { getIcon, prettyDate } from "./utils";
 import { useEffect } from "react";
+import ItemDetail from "./ItemDetail";
 
 export default function Command() {
   const apiKey = "0TvQnueqKa5mxJntVWt0w4LpLfEkrV1Ta8rQBb9Z";
@@ -53,9 +54,9 @@ export default function Command() {
     let eventList = data?.data.schedule.events || [];
     // 对比赛进行过滤
     if (filter !== "all") {
-        const filterLeague = leagues?.find((league) => league.id === filter);
-        eventList = eventList.filter((event) => event.league.slug === filterLeague?.slug);
-    } 
+      const filterLeague = leagues?.find((league) => league.id === filter);
+      eventList = eventList.filter((event) => event.league.slug === filterLeague?.slug);
+    }
     // 对比赛进行排序
     eventList.sort((a, b) => {
       const dataA = new Date(a.startTime).getTime();
@@ -91,7 +92,7 @@ export default function Command() {
               }}
               keywords={["T1"]}
               title={`${event.blockName} ${team1.code} vs ${team2.code}`}
-              subtitle={prettyDate(event.startTime)}
+              subtitle={!showingDetail ? prettyDate(event.startTime) : undefined}
               actions={
                 <ActionPanel>
                   <Action
@@ -100,35 +101,31 @@ export default function Command() {
                     onAction={() => setShowingDetail(!showingDetail)}
                   />
                   <Action title="Add Calendar" icon={Icon.Calendar} onAction={() => {}} />
-                  <Action
-                    title="See live on Bilibili"
-                    icon={Icon.Video}
-                    onAction={() => {}}
-                  />
-                  <Action
-                    title="See live on YouTube"
-                    icon={Icon.Video}
-                    onAction={() => {}}
-                  />
+                  <Action title="See live on YouTube" icon={Icon.Video} onAction={() => {}} />
                 </ActionPanel>
               }
-              accessories={[
-                {
-                  icon: getIcon(league.image),
-                  tag: league.name,
-                },
-                {
-                  icon: getIcon(team1.image),
-                  text: team1.result.gameWins.toString(),
-                },
-                {
-                  text: " : ",
-                },
-                {
-                  icon: getIcon(team2.image),
-                  text: team2.result.gameWins.toString(),
-                },
-              ]}
+              accessories={
+                !showingDetail
+                  ? [
+                      {
+                        icon: getIcon(league.image),
+                        tag: league.name,
+                      },
+                      {
+                        icon: getIcon(team1.image),
+                        text: team1.result.gameWins.toString(),
+                      },
+                      {
+                        text: " : ",
+                      },
+                      {
+                        icon: getIcon(team2.image),
+                        text: team2.result.gameWins.toString(),
+                      },
+                    ]
+                  : []
+              }
+              detail={<ItemDetail />}
             />
           );
         })}
