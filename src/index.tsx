@@ -13,7 +13,6 @@ export default function Command() {
       schedule: {
         events: Event[];
       };
-      pages: any;
     };
   }>("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=en-US", {
     headers: {
@@ -33,7 +32,7 @@ export default function Command() {
 
   const [events, setEvents] = useCachedState<Event[]>("events", []);
 
-  const [leagues, setLeagues] = useCachedState("leagues", dataLeagues?.data.leagues);
+  const [leagues] = useCachedState("leagues", dataLeagues?.data.leagues);
 
   const [filter, setFilter] = useCachedState("filter", "all");
   const [showingDetail, setShowingDetail] = useCachedState("showDetails", false);
@@ -65,7 +64,7 @@ export default function Command() {
     >
       <List.EmptyView title="No Result" />
       <List.Section title="Matches" key={"1"}>
-        {events?.map((event: Event, index) => {
+        {events?.map((event: Event) => {
           const team1 = event.match.teams[0];
           const team2 = event.match.teams[1];
           const league = leagues?.find((league) => league.slug === event.league.slug) || {
@@ -116,7 +115,15 @@ export default function Command() {
                     ]
                   : []
               }
-              detail={<ItemDetail vid={''} blockName={event.blockName} match={event.match} state={event.state} startTime={event.startTime} />}
+              detail={
+                <ItemDetail
+                  vid={""}
+                  blockName={event.blockName}
+                  match={event.match}
+                  state={event.state}
+                  startTime={event.startTime}
+                />
+              }
             />
           );
         })}

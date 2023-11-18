@@ -16,7 +16,7 @@ function Filter({ leagueList, handleChange }: Props) {
           key={league.id}
           title={league.name}
           value={league.id}
-          icon={{ source: getIcon(league.image), mask: Image.Mask.Circle, }}
+          icon={{ source: getIcon(league.image), mask: Image.Mask.Circle }}
         />
       ))}
     </List.Dropdown>

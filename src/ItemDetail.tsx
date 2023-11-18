@@ -11,7 +11,6 @@ type Props = {
 };
 
 export default function ItemDetail({ match, blockName, startTime, state, vid }: Props) {
-  
   return (
     <List.Item.Detail
       metadata={

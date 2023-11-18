@@ -50,7 +50,6 @@ export type League = {
   };
 };
 
-
 export const matchStateColor = {
   // completed: FFC107 橙黄色
   // inProgress: 28A745 绿色
