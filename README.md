@@ -7,7 +7,7 @@
 A Raycast extension 
 </p>
 
-<img width="862" src="./metadata/Screenshot1.png">
+<img width="862" align="center" src="./metadata/Screenshot1.png">
 
 ## Motivation
 
