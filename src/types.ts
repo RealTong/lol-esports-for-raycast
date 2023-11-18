@@ -1,7 +1,8 @@
+export type MatchState = "completed" | "inProgress" | "unstarted";
 export type Event = {
   blockName: string;
   startTime: string;
-  state: "completed" | "inProgress" | "unstarted";
+  state: MatchState;
   type: string;
   league: {
     name: string;
@@ -47,4 +48,14 @@ export type League = {
     position: number;
     status: "selected" | "force_selected";
   };
+};
+
+
+export const matchStateColor = {
+  // completed: FFC107 橙黄色
+  // inProgress: 28A745 绿色
+  // notStarted: 6C757D 灰色
+  completed: "#28A745",
+  inProgress: "#FFC107",
+  unstarted: "#6C757D",
 };

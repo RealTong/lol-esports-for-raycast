@@ -1,37 +1,41 @@
 import { List } from "@raycast/api";
+import { Match, MatchState, matchStateColor } from "./types";
+import { formatDateTime } from "./utils";
 
 type Props = {
-  team1: any;
-  team2: any;
+  blockName: string;
+  startTime: string;
+  state: MatchState;
+  match: Match;
+  vid?: string;
 };
-export default function ItemDetail() {
-  const markdown = `
-  <img src="https://static.lolesports.com/teams/1641202879910_3.png" width="100" />
-${"T1"} vs ${"EDG"}
-<img src="https://static.lolesports.com/teams/1698742459630_T1_Color_v2.png" width="100" />`;
+
+export default function ItemDetail({ match, blockName, startTime, state, vid }: Props) {
+  
   return (
     <List.Item.Detail
-      markdown={markdown}
       metadata={
         <List.Item.Detail.Metadata>
-          <List.Item.Detail.Metadata.Label title="Strategy" text={"BO 5"} />
-          <List.Item.Detail.Metadata.Label
-            title="League"
-            text={"World Championship 2021"}
-            icon="http://static.lolesports.com/leagues/1592594612171_WorldsDarkBG.png"
-          />
-          {/* 比赛时间 */}
-          <List.Item.Detail.Metadata.Label title="Start Time" text="2021-10-05 12:00" />
+          <List.Item.Detail.Metadata.Label title="BlockName" text={`${blockName}`} />
           {/* 比赛状态 */}
           <List.Item.Detail.Metadata.TagList title="State">
-            <List.Item.Detail.Metadata.TagList.Item text="Completed" color={"#28A745"} />
+            <List.Item.Detail.Metadata.TagList.Item text={`${state}`} color={matchStateColor[state]} />
           </List.Item.Detail.Metadata.TagList>
-          <List.Item.Detail.Metadata.Separator />
-          <List.Item.Detail.Metadata.Link
-            title="See match"
-            text="YouTube"
-            target="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-          />
+          <List.Item.Detail.Metadata.Label title="League" text={"Worlds"} />
+          <List.Item.Detail.Metadata.Label title="Strategy" text={`${match.strategy.type} ${match.strategy.count}`} />
+          <List.Item.Detail.Metadata.TagList title="Teams">
+            <List.Item.Detail.Metadata.TagList.Item text={`${match.teams[0].code}`} />
+            <List.Item.Detail.Metadata.TagList.Item text={`${match.teams[1].code}`} />
+          </List.Item.Detail.Metadata.TagList>
+          {/* 比赛时间 */}
+          <List.Item.Detail.Metadata.Label title="Start Time" text={`${formatDateTime(new Date(startTime))}`} />
+          {vid && (
+            <List.Item.Detail.Metadata.Link
+              title="See match"
+              text="YouTube"
+              target={`https://www.youtube.com/watch?v=${vid}`}
+            />
+          )}
         </List.Item.Detail.Metadata>
       }
     />

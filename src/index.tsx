@@ -1,6 +1,6 @@
 import { List, Icon, ActionPanel, Action } from "@raycast/api";
 import { useCachedState, useFetch } from "@raycast/utils";
-import { Event, League } from "./types";
+import { Event, League, matchStateColor } from "./types";
 import Filter from "./Filter";
 import { getIcon, prettyDate } from "./utils";
 import { useEffect } from "react";
@@ -30,7 +30,7 @@ export default function Command() {
       "x-api-key": apiKey,
     },
   });
-  let eventList: Event[] = [];
+
   const [events, setEvents] = useCachedState<Event[]>("events", []);
 
   const [leagues, setLeagues] = useCachedState("leagues", dataLeagues?.data.leagues);
@@ -39,15 +39,6 @@ export default function Command() {
   const [showingDetail, setShowingDetail] = useCachedState("showDetails", false);
   const onFilterChange = (value: string) => {
     setFilter(value);
-  };
-
-  const iconColor = {
-    // completed: FFC107 橙黄色
-    // inProgress: 28A745 绿色
-    // notStarted: 6C757D 灰色
-    completed: "#28A745",
-    inProgress: "#FFC107",
-    unstarted: "#6C757D",
   };
 
   useEffect(() => {
@@ -79,7 +70,7 @@ export default function Command() {
           const team2 = event.match.teams[1];
           const league = leagues?.find((league) => league.slug === event.league.slug) || {
             name: "Worlds",
-            image: "http%3A%2F%2Fstatic.lolesports.com%2Fleagues%2F1592594612171_WorldsDarkBG.png",
+            image: "https://static.lolesports.com/leagues/1592594612171_WorldsDarkBG.png",
           };
 
           return (
@@ -88,7 +79,7 @@ export default function Command() {
               id={event.match.id}
               icon={{
                 source: Icon.Dot,
-                tintColor: iconColor[event.state],
+                tintColor: matchStateColor[event.state],
               }}
               keywords={["T1"]}
               title={`${event.blockName} ${team1.code} vs ${team2.code}`}
@@ -125,7 +116,7 @@ export default function Command() {
                     ]
                   : []
               }
-              detail={<ItemDetail />}
+              detail={<ItemDetail blockName={event.blockName} match={event.match} state={event.state} startTime={event.startTime} />}
             />
           );
         })}
