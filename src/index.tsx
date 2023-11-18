@@ -15,7 +15,7 @@ export default function Command() {
       };
       pages: any;
     };
-  }>("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=zh-TW", {
+  }>("https://esports-api.lolesports.com/persisted/gw/getSchedule?hl=en-US", {
     headers: {
       "x-api-key": apiKey,
     },
@@ -25,7 +25,7 @@ export default function Command() {
     data: {
       leagues: League[];
     };
-  }>("https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=zh-TW", {
+  }>("https://esports-api.lolesports.com/persisted/gw/getLeagues?hl=en-US", {
     headers: {
       "x-api-key": apiKey,
     },
@@ -91,8 +91,8 @@ export default function Command() {
                     icon={Icon.AppWindowSidebarLeft}
                     onAction={() => setShowingDetail(!showingDetail)}
                   />
-                  <Action title="Add Calendar" icon={Icon.Calendar} onAction={() => {}} />
-                  <Action title="See live on YouTube" icon={Icon.Video} onAction={() => {}} />
+                  {/* <Action title="Add Calendar" icon={Icon.Calendar} onAction={() => {}} />
+                  <Action title="See live on YouTube" icon={Icon.Video} onAction={() => {}} /> */}
                 </ActionPanel>
               }
               accessories={
@@ -116,7 +116,7 @@ export default function Command() {
                     ]
                   : []
               }
-              detail={<ItemDetail blockName={event.blockName} match={event.match} state={event.state} startTime={event.startTime} />}
+              detail={<ItemDetail vid={''} blockName={event.blockName} match={event.match} state={event.state} startTime={event.startTime} />}
             />
           );
         })}
